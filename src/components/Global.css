@@ -1,0 +1,64 @@
+
+
+:root {
+
+
+    /* Brand / Primary Colors */
+    --primary: #7C3AED;         /* البنفسجي الأساسي */
+    --primary-gradient: linear-gradient(90deg, #7C3AED, #A855F7);
+    --primary-light: #8B5CF6;   /* hover / links */
+    --primary-soft: #A855F7;    /* highlights */
+    --primary-alt: #6366F1;     /* accent إضافي */
+
+    /* Event Colors (Dark Theme) */
+    --event-purple: #8B5CF6;
+    --event-blue: #3B82F6;
+    --event-teal: #14B8A6;
+    --event-pink: #EC4899;
+    --event-amber: #F59E0B;
+
+    /* Event Colors (Light Theme - Soft Backgrounds) */
+    --event-purple-soft: #F3E8FF;
+    --event-blue-soft: #DBEAFE;
+    --event-teal-soft: #CCFBF1;
+    --event-pink-soft: #FCE7F3;
+    --event-amber-soft: #FEF3C7;
+    --event-green-soft: #D1FAE5;
+
+   
+
+
+    /* Shadows & Effects */
+    --shadow-dark: rgba(0,0,0,0.4);
+    --shadow-light: rgba(0,0,0,0.1);
+    --glow-primary: rgba(124,58,237,0.3);
+
+
+    /* Light Theme */
+    --bg-primary-light: #F9FAFB;
+    --bg-surface-light: #FFFFFF;
+    --bg-section-light: #F3F4F6;
+    --bg-input-light: #F3F2F7;
+    --border-light: #E5E7EB;
+
+     /* Typography */
+    --text-primary-light: #111827;
+    --text-secondary-light: #6B7280;
+    --text-danger: #F43F5E;
+}
+
+.dark {
+
+    /* Base / Dark Theme */
+    --bg-primary: #1A1B2E;      /* الصفحة */
+    /* --bg-navbar: #110F19;       الناف بار */
+    --bg-card: #2D2E42;         /* الكروت */
+    --bg-surface: #252638;      /* الكروت / السايدبار */
+    --bg-input: #1F1E26;        /* الانبوت */
+    --border: #4B4C62;          /* البوردر */
+    --glass-light: rgba(255,255,255,0.05);
+    --glass-strong: rgba(255,255,255,0.15);
+    --text-primary-dark: #FFFFFF;
+    --text-secondary-dark: #9CA3AF;
+
+}
