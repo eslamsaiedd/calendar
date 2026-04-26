@@ -7,8 +7,8 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg dark:text-white text-[var(--primary-color)] bg-[var(--bg-input-light)] hover:bg-gray-200 
-      dark:bg-[var(--bg-surface)] hover:dark:bg-[var(--bg-input)]  hover:cursor-pointer md:block"
+      className="p-2 rounded-lg dark:text-white text-[var(--primary-color)] bg-[var(--border-light)] hover:bg-gray-200 
+     dark:bg-[var(--bg-card)] hover:dark:bg-[var(--bg-input)]  hover:cursor-pointer md:block"
     >
         {dark?(
             <Sun />

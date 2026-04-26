@@ -53,12 +53,14 @@ export default function SmallCalendar() {
     return (    
         <>
             {/* header */}
-            <div className='flex justify-center items-center gap-2 mb-3'>
+            <div className='flex justify-center items-center gap-2'>
                <button onClick={previousMonth}
                     className="p-2.5 cursor-pointer dark:bg-[var(--bg-card)] rounded-lg dark:text-white transition">
                     <ChevronLeft size={12} />
                 </button>
-                <div className='text-white'>{MONTHS[month]} {year}</div>
+                <div className='dark:text-[var(--text-primary-dark)] text-[var(--text-primary-light)] font-bold '>
+                    {MONTHS[month]} {year}
+                </div>
                 <button onClick={nextMonth}
                     className="p-2.5 cursor-pointer dark:bg-[var(--bg-card)] rounded-lg dark:text-white transition">
                     <ChevronRight size={12} />
@@ -66,7 +68,7 @@ export default function SmallCalendar() {
             </div>
 
             {/* small calendar */}
-            <div className='grid grid-cols-7 gap-1 mb-1.5'>
+            <div className='grid grid-cols-7 mb-1'>
                 {["SU", "MO", "TU", "WE", "TH", "FR", "SA"].map(day => (
                     <div key={day} className='text-center text-xs dark:text-[var(--text-secondary-dark)] font-semibold'>
                         {day}
@@ -75,12 +77,15 @@ export default function SmallCalendar() {
 
                 {totalDays.map((d, i) => (
                     <div key={i} className={`aspect-square flex items-center justify-center text-sm rounded-full cursor-pointer transition-colors ${
-                        d.isCurrentMonth ? (isToday(d.day) ? 'bg-[var(--primary-color)] text-white' : 'text-[var(--text-primary-light)] dark:text-[var(--text-primary-dark)] hover:bg-gray-200 dark:hover:bg-gray-700') : 'text-[var(--text-secondary-light)] dark:text-[var(--text-secondary-dark)]'
+                        d.isCurrentMonth ? (isToday(d.day) ? 'bg-[var(--primary)] text-center w-7 h-7 rounded-full text-white' : 'text-[var(--text-primary-light)] dark:text-[var(--text-primary-dark)] hover:bg-gray-200 dark:hover:bg-gray-700') : 'text-[var(--text-secondary-light)] dark:text-[var(--text-secondary-dark)]'
                     }`}>
                         {d.day}
                     </div>
                 ))}
             </div>
+            <button className="mt-2 p-2 w-full bg-[linear-gradient(90deg,#7C3AED,#A855F7)] text-white rounded-lg hover:bg-[var(--primary-hover)]">
+                create event
+            </button>
         </>
     )
 }

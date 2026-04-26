@@ -36,10 +36,9 @@
 
     /* Light Theme */
     --bg-primary-light: #F9FAFB;
-    --bg-surface-light: #FFFFFF;
     --bg-section-light: #F3F4F6;
     --bg-input-light: #F3F2F7;
-    --border-light: #E5E7EB;
+    --border-light: #e5e7eb71;
 
      /* Typography */
     --text-primary-light: #111827;
