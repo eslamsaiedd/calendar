@@ -8,7 +8,7 @@ export function Header() {
     const name = 'eslam saied'
 
  return (
-    <nav className="w-full sticky top-0 border-b border-[var(--border-light)] dark:border-[var(--border)] z-50 bg-white dark:bg-[var(--bg-primary)] h-16 flex items-center justify-between px-6">
+    <nav className="w-full sticky top-0 border-b border-[var(--updated-border-light)] dark:border-[var(--border)] z-50 bg-white dark:bg-[var(--bg-primary)] h-16 flex items-center justify-between px-6">
         {/* Logo */}
       <h1 className="text-2xl font-bold flex items-center gap-1 dark:text-white text-[var(--primary-color)]">
         <CalendarDays className="dark:text-white w-7 h-7"/>
@@ -24,7 +24,7 @@ export function Header() {
       <div className="flex gap-1.5 items-center">
         {auth ? (
             <button
-                  className="flex items-center gap-3 p-2 bg-[var(--border-light)] dark:text-[var(--text-primary-dark)] dark:bg-[var(--bg-card)] hover:dark:bg-[var(--bg-input)] hover:cursor-pointer hover:dark:bg-[var()] hover:bg-gray-200 rounded-xl transition"
+                  className="flex items-center gap-3 p-2 bg-[var(--border-light)] dark:hover:bg-gray-700 dark:text-[var(--text-primary-dark)] dark:bg-[var(--bg-card)] hover:cursor-pointer hover:dark:bg-[var()] hover:bg-gray-200 rounded-xl transition"
                 >
                 <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center dark:text-[var(--text-primary-dark)] dark:bg-[var(--bg-navbar)] font-semibold text-sm">
                     {name ? (

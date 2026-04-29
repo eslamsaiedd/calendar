@@ -38,7 +38,8 @@
     --bg-primary-light: #F9FAFB;
     --bg-section-light: #F3F4F6;
     --bg-input-light: #F3F2F7;
-    --border-light: #e5e7eb71;
+    --border-light: #e5e7eb58;
+    --updated-border-light: #e5e7eb;
 
      /* Typography */
     --text-primary-light: #111827;
@@ -60,4 +61,22 @@
     --text-primary-dark: #FFFFFF;
     --text-secondary-dark: #9CA3AF;
 
+}
+
+/* custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7C3AED;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #A855F7;
 }

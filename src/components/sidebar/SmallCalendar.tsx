@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 
 
 export default function SmallCalendar() {
@@ -76,14 +76,16 @@ export default function SmallCalendar() {
                 ))}
 
                 {totalDays.map((d, i) => (
-                    <div key={i} className={`aspect-square flex items-center justify-center text-sm rounded-full cursor-pointer transition-colors ${
-                        d.isCurrentMonth ? (isToday(d.day) ? 'bg-[var(--primary)] text-center w-7 h-7 rounded-full text-white' : 'text-[var(--text-primary-light)] dark:text-[var(--text-primary-dark)] hover:bg-gray-200 dark:hover:bg-gray-700') : 'text-[var(--text-secondary-light)] dark:text-[var(--text-secondary-dark)]'
+                    <div key={i} className={`aspect-square flex items-center justify-center text-xs rounded-full cursor-pointer transition-colors ${
+                        d.isCurrentMonth ? (isToday(d.day) ? 'bg-[var(--primary)] text-center w-6 h-6 rounded-full text-white' : 'text-[var(--text-primary-light)] dark:text-[var(--text-primary-dark)] hover:bg-gray-200 dark:hover:bg-gray-700') : 'text-[var(--text-secondary-light)] dark:text-[var(--text-secondary-dark)]'
                     }`}>
                         {d.day}
                     </div>
                 ))}
             </div>
-            <button className="mt-2 p-2 w-full bg-[linear-gradient(90deg,#7C3AED,#A855F7)] text-white rounded-lg hover:bg-[var(--primary-hover)]">
+            
+           <button className="mt-2 flex items-center text-center justify-center h-fit text-lg gap-1 p-2 w-full bg-[linear-gradient(90deg,#7C3AED,#A855F7)] text-white rounded-lg hover:bg-[var(--primary-hover)]">
+                <Plus className='w-5 h-5' />
                 create event
             </button>
         </>
