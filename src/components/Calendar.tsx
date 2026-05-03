@@ -4,6 +4,8 @@ import { MonthOverview } from "./Overviews/MonthOverview";
 import YearOverview from "./Overviews/YearOverview";
 import WeekOverview from "./Overviews/WeekOverview";
 import DayOverview from "./Overviews/DayOverview";
+import { useModal } from "../context/ModalContext";
+import FormModal from "./FormModal";
 
 const MONTHS = [
   "January",
@@ -23,6 +25,10 @@ const MONTHS = [
 type View = "year" | "month" | "week" | "day";
 
 function Home() {
+
+  const { isOpen} = useModal();
+
+  
   const [data, setData] = useState(new Date());
   const [active, setActive] = useState<View>("month");
 
@@ -62,7 +68,9 @@ function Home() {
     { label: "Week", value: "week" },
     { label: "Day", value: "day" },
   ];
-
+  
+  // if (!isOpen) return null;
+  
   return (
     // h-full يملأ الـ main اللي عنده overflow-y-auto
     <div className="flex flex-col h-full px-6 py-3 bg-[var(--border-light)] dark:bg-[var(--bg-primary)]">
@@ -112,6 +120,14 @@ function Home() {
           Today
         </button>
       </div>
+          {isOpen && (
+
+              <FormModal
+              // onClose={() => closeModal()}
+              onSubmit={(data) => console.log(data)}
+              />
+          )}
+
 
       {active === "year" && <YearOverview data={data} />}
       {active === "month" && <MonthOverview data={data} />}
