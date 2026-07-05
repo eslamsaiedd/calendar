@@ -1,0 +1,16 @@
+/**
+ * Operational error class. Thrown intentionally (bad input, not found, unauthorized, etc.)
+ * so the centralized error handler can distinguish them from programming/unexpected errors.
+ */
+class AppError extends Error {
+  constructor(message, statusCode) {
+    super(message);
+    this.statusCode = statusCode;
+    this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
+    this.isOperational = true;
+
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+
+module.exports = AppError;
