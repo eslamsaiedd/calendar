@@ -1,0 +1,22 @@
+# ======================
+# Frontend
+# ======================
+frontend/node_modules/
+frontend/dist/
+
+# ======================
+# Backend
+# ======================
+backend/calendar-backend/node_modules/
+backend/calendar-backend/.env
+
+# ======================
+# Logs
+# ======================
+*.log
+
+# ======================
+# OS Files
+# ======================
+.DS_Store
+Thumbs.db
