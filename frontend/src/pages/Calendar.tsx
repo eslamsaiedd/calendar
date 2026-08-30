@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { MonthOverview } from "../components/Overviews/MonthOverview";
 import YearOverview from "../components/Overviews/YearOverview";
@@ -6,7 +6,6 @@ import WeekOverview from "../components/Overviews/WeekOverview";
 import DayOverview from "../components/Overviews/DayOverview";
 import { useModal } from "../context/ModalContext";
 import FormModal from "../components/FormModal";
-import axios from "axios";
 
 const MONTHS = [
   "January",

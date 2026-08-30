@@ -1,8 +1,19 @@
 import { useMemo, useRef, useEffect } from "react";
+import { useCalendar } from "../../context/CalendarContext";
 
 type Props = {
   data: Date;
 };
+
+
+const COLOR_MAP = {
+  purple: "#7c3aed",
+  blue: "#3b82f6",
+  teal: "#14b8a6",
+  pink: "#ec4899",
+  amber: "#f59e0b",
+  green: "#22c55e",
+} as const;
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 const HOUR_HEIGHT = 64; // same as week view
@@ -28,6 +39,30 @@ function DayOverview({ data }: Props) {
     const now = new Date();
     return (now.getHours() + now.getMinutes() / 60) * HOUR_HEIGHT;
   }, []);
+
+  const { holidayEvents, userEvents } = useCalendar();
+  const allEvents = [...holidayEvents, ...userEvents];
+
+  const parseTimeToHours = (time?: string) => {
+    if (!time) return 0;
+    const match = time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+    if (!match) return 0;
+    let h = Number(match[1]);
+    const m = Number(match[2]);
+    const mer = match[3];
+    if (mer && mer.toUpperCase() === "PM" && h < 12) h += 12;
+    if (mer && mer.toUpperCase() === "AM" && h === 12) h = 0;
+    return h + m / 60;
+  };
+
+  const eventsForDay = allEvents.filter((ev) => {
+    const evDate = new Date(ev.date + "T00:00:00");
+    return (
+      evDate.getFullYear() === data.getFullYear() &&
+      evDate.getMonth() === data.getMonth() &&
+      evDate.getDate() === data.getDate()
+    );
+  });
 
   return (
     <div className="flex-1 flex flex-col border dark:border-[var(--border)] border-[var(--updated-border-light)] bg-white dark:bg-[var(--bg-card)] rounded-lg overflow-hidden">
@@ -74,6 +109,30 @@ function DayOverview({ data }: Props) {
                 className="h-16 border-b border-[var(--updated-border-light)] dark:border-[var(--border)]"
               />
             ))}
+            {/* Events positioned by start time */}
+            {eventsForDay.map((ev) => {
+              const startHours = parseTimeToHours(ev.startTime);
+              const endHours = ev.endTime ? parseTimeToHours(ev.endTime) : startHours + 1;
+              const top = startHours * HOUR_HEIGHT;
+              const height = Math.max(22, (endHours - startHours) * HOUR_HEIGHT);
+
+              const fallbackColor = COLOR_MAP.purple;
+              const bg = ev.source === "holiday"
+                ? COLOR_MAP.blue
+                : (ev.colorLabel && ev.colorLabel in COLOR_MAP
+                    ? COLOR_MAP[ev.colorLabel as keyof typeof COLOR_MAP]
+                    : fallbackColor);
+
+              return (
+                <div
+                  key={ev.id}
+                  className="absolute left-4 right-4 rounded-md text-white px-2 py-1 text-sm overflow-hidden"
+                  style={{ top, height, background: bg }}
+                >
+                  {ev.source === "holiday" ? ev.englishTitle ?? ev.arabicTitle : ev.title}
+                </div>
+              );
+            })}
 
             {/* Current time line */}
             {isToday && (

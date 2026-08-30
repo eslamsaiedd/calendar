@@ -1,30 +1,55 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, type ReactNode } from "react";
 import axios from "axios";
 
-export const UserContext = createContext();
+interface User {
+  _id: string;
+  username: string;
+  email: string;
+  avatar?: string;
+  createdAt?: string;
+}
 
-export default function UserContextProvider({ children }) {
-  const [user, setUser] = useState(null);
+interface UserContextType {
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  getUserData: () => Promise<void>;
+}
 
-  async function getUserData() {
+const defaultUserContextValue: UserContextType = {
+  user: null,
+  setUser: () => undefined,
+  getUserData: async () => undefined,
+};
+
+export const UserContext = createContext<UserContextType>(
+  defaultUserContextValue,
+);
+
+export default function UserContextProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const [user, setUser] = useState<User | null>(null);
+
+  async function getUserData(): Promise<void> {
     const token = localStorage.getItem("token");
 
     if (!token) return;
 
     try {
-      const { data } = await axios.get(
-        "http://localhost:5000/api/auth/me",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const { data } = await axios.get("http://localhost:5000/api/auth/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       setUser(data.data.user);
+      window.dispatchEvent(new Event("auth:changed"));
     } catch (error) {
       localStorage.removeItem("token");
       setUser(null);
+      window.dispatchEvent(new Event("auth:changed"));
     }
   }
 

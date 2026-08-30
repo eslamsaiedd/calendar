@@ -1,5 +1,6 @@
 const User = require('../models/User.model');
 const Calendar = require('../models/Calendar.model');
+const Event = require('../models/Event.model');
 const AppError = require('../utils/AppError');
 const { verifyGoogleToken } = require('../config/googleAuth');
 const { AUTH_PROVIDERS } = require('../constants');
@@ -43,6 +44,27 @@ exports.login = async ({ email, password }) => {
   }
 
   return user;
+};
+
+exports.updateUser = async (userId, updates) => {
+  const allowed = {};
+  if (updates.username) allowed.username = updates.username;
+  if (updates.email) allowed.email = updates.email;
+  if (updates.avatar) allowed.avatar = updates.avatar;
+
+  const user = await User.findByIdAndUpdate(userId, allowed, { new: true, runValidators: true });
+  if (!user) throw new Error('User not found');
+  return user;
+};
+
+exports.deleteUser = async (userId) => {
+  // remove calendar and events owned by this user, then remove user
+  const calendar = await Calendar.findOne({ owner: userId }).select('_id');
+  if (calendar) {
+    await Event.deleteMany({ calendar: calendar._id });
+    await Calendar.deleteOne({ _id: calendar._id });
+  }
+  await User.findByIdAndDelete(userId);
 };
 
 exports.googleLogin = async (idToken) => {

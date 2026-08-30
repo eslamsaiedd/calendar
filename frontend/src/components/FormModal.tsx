@@ -10,6 +10,7 @@ import {
   Plus,
 } from "lucide-react";
 import { useModal } from "../context/ModalContext";
+  import { useCalendar } from "../context/CalendarContext";
 import axios from "axios";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -93,8 +94,6 @@ const getInitialFormState = (): FormState => {
 
 // ─── Shared class helpers ─────────────────────────────────────────────────────
 
-// Light:  white bg, gray-200 border, gray-800 text
-// Dark:   #1e1e32 bg, #2e2e4a border, #e8e8f0 text
 const fieldCls = `
   flex items-center gap-2 rounded-lg px-3 py-2
   bg-[#e5e7eb58] border border-gray-200 text-gray-800
@@ -295,6 +294,7 @@ export default function CreateEventForm({ onSubmit }: CreateEventFormProps) {
   const [form, setForm] = useState<FormState>(() => getInitialFormState());
 
   const { isOpen, closeModal } = useModal();
+  const { refreshEvents } = useCalendar();
 
   const update = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -305,15 +305,30 @@ export default function CreateEventForm({ onSubmit }: CreateEventFormProps) {
     update("category", id);
   };
 
-  const handleSubmit = () => {
-    axios.post("http://localhost:5000/api/events", form, {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem('token')}`
-      }
-    });
-  };
+  const handleSubmit = async () => {
+    const payload = {
+      ...form,
+      color: form.colorLabel, 
+    };
 
+    delete (payload as { colorLabel?: string }).colorLabel;
+
+    try {
+      await axios.post("http://localhost:5000/api/events", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      const today = new Date();
+      await refreshEvents(today.getFullYear(), today.getMonth() + 1);
+      onSubmit?.(form);
+      closeModal();
+    } catch (error) {
+      console.error("Error creating event:", error);
+    }
+  };
   return (
     <>
       {isOpen && (
@@ -494,7 +509,7 @@ export default function CreateEventForm({ onSubmit }: CreateEventFormProps) {
                 Cancel
               </button>
               <button
-                onClick={() => { handleSubmit(); onSubmit?.(form); closeModal(); }}
+                onClick={() => { void handleSubmit(); }}
                 className="
                   py-2.5 rounded-[9px] text-[13px] font-bold text-white border-none cursor-pointer transition-all
                   bg-gradient-to-br from-violet-600 to-violet-500

@@ -28,6 +28,18 @@ exports.getMe = catchAsync(async (req, res) => {
   });
 });
 
+exports.updateMe = catchAsync(async (req, res) => {
+  const updates = req.body;
+  const user = await authService.updateUser(req.user._id, updates);
+  res.status(200).json({ status: 'success', data: { user } });
+});
+
+exports.deleteMe = catchAsync(async (req, res) => {
+  await authService.deleteUser(req.user._id);
+  res.clearCookie(COOKIE_NAME);
+  res.status(200).json({ status: 'success', data: null });
+});
+
 exports.logout = catchAsync(async (req, res) => {
   res.clearCookie(COOKIE_NAME);
   res.status(200).json({ status: 'success', data: null });

@@ -9,7 +9,7 @@ export function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext);
+  const {setUser}  = useContext(UserContext);
 
 
 
@@ -38,6 +38,7 @@ export function Login() {
       
       localStorage.setItem('token', response.data.token);
       setUser(response.data.data.user);
+      window.dispatchEvent(new Event("auth:changed"));
       navigate("/");
     } catch (error) {
       console.error('Login failed:', error); // See the actual error

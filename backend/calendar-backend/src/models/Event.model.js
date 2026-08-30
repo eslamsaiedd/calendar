@@ -21,6 +21,22 @@ const eventSchema = new mongoose.Schema(
       maxlength: 2000,
       default: '',
     },
+    startTime: {
+      type: String,
+      required: [true, 'Event time is required'],
+    },
+    endTime: {
+      type: String,
+      required: [true, 'Event time is required'],
+      validate: {
+        validator: function (value) {
+          // 'this' refers to the document only on save(), not on findOneAndUpdate
+          if (this.startTime) return value >= this.startTime;
+          return true;
+        },
+        message: 'endTime must be the same as or after startTime',
+      },
+    },
     startDate: {
       type: Date,
       required: [true, 'Start date is required'],

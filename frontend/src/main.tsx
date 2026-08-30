@@ -6,17 +6,20 @@ import "./index.css";
 import { ModalProvider } from "./context/ModalContext.tsx";
 import UserContextProvider from "./context/UserContext.tsx";
 import { CalendarProvider } from "./context/CalendarContext.tsx";
+import { ToastProvider } from "./context/ToastContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <CalendarProvider>
-      <UserContextProvider>
-        <ThemeProvider>
-          <ModalProvider>
-            <AppRouter />
-          </ModalProvider>
-        </ThemeProvider>
-      </UserContextProvider>
-    </CalendarProvider> 
+    <ToastProvider>
+      <CalendarProvider>
+        <UserContextProvider>
+          <ThemeProvider>
+            <ModalProvider>
+              <AppRouter />
+            </ModalProvider>
+          </ThemeProvider>
+        </UserContextProvider>
+      </CalendarProvider> 
+    </ToastProvider>
   </StrictMode>,
 );

@@ -5,22 +5,58 @@ import {
   useEffect,
   useState,
   useCallback,
-  ReactNode,
   useRef,
 } from "react";
 
+import type { ReactNode } from "react";
+
+type modifiedPublicEvent = {
+  counties?: string[];
+  countryCode: string;
+  date: string;
+  fixed: boolean;
+  global: boolean;
+  launchYear: number | null;
+  localName: string;
+  name: string;
+  types: string[];
+};
+
+type modifiedEvent = {
+  date: {
+    gregorian: {
+      date: string;
+    };
+    hijri: {
+      date: string;
+      holidays: string[];
+    };
+  };
+};
+
 export type CalendarEvent = {
+  _id?: string;
   id: string;
   title?: string;
+  description?: string;
   englishTitle?: string;
   arabicTitle?: string;
   isTranslated?: boolean;
-  date: string;
+  color?: string;
+  colorLabel?: string;
+  startTime?: string;
+  endTime?: string;
+  source?: "holiday" | "user";
+  date: string
   type: "event" | "task" | "holiday";
+  startDate?: string;
+  endDate?: string;
 };
 
 type CalendarContextType = {
   events: CalendarEvent[];
+  holidayEvents: CalendarEvent[];
+  userEvents: CalendarEvent[];
   loading: boolean;
   refreshEvents: (year: number, month: number) => Promise<void>;
 };
@@ -54,7 +90,7 @@ const getEventData = (holiday: string) => {
   return null;
 };
 
-const transformIslamicEvents = (data: any[]): CalendarEvent[] => {
+const transformIslamicEvents = (data: modifiedEvent[]): CalendarEvent[] => {
   return data.flatMap((day) => {
     const holidays = day.date.hijri.holidays;
 
@@ -73,11 +109,12 @@ const transformIslamicEvents = (data: any[]): CalendarEvent[] => {
       date: `${y}-${m}-${d}`,
       type: "holiday",
       isTranslated: true,
+      source: "holiday",
     }));
   });
 };
 
-const transformPublicEvents = (data: any[]): CalendarEvent[] => {
+const transformPublicEvents = (data: modifiedPublicEvent[]): CalendarEvent[] => {
   return data.map((event) => ({
     id: `public-${event.date}`,
     englishTitle: event.name,
@@ -85,6 +122,7 @@ const transformPublicEvents = (data: any[]): CalendarEvent[] => {
     isTranslated: true,
     date: event.date,
     type: "holiday",
+    source: "holiday",
   }));
 };
 
@@ -92,6 +130,13 @@ async function fetchHolidayEvents(
   year: number,
   month: number,
 ): Promise<CalendarEvent[]> {
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.error("No token found in localStorage.");
+      return [];
+    }
   const [islamicRes, publicRes] = await Promise.all([
     fetch(
       `https://api.aladhan.com/v1/calendar/${year}/${month}?latitude=30&longitude=31`,
@@ -102,12 +147,13 @@ async function fetchHolidayEvents(
   const islamicData = await islamicRes.json();
   const publicData = await publicRes.json();
 
-  const modifiedData = islamicData.data.map((items) => ({
+
+  const modifiedData = islamicData.data.map((items: unknown[]) => ({
     ...items,
     isTranslated: true,
   }));
 
-  const modifiedDataPublic = publicData.map((item) => ({
+  const modifiedDataPublic = publicData.map((item: unknown[]) => ({
     ...item,
     isTranslated: true,
   }));
@@ -134,16 +180,22 @@ async function fetchUserEvents() {
       },
     });
 
-    const modifiedData = response.data.data.events.map((item) => ({
+    const modifiedData = response.data.data.events.map((item: unknown[]) => ({
       ...item,
-      isTranslated: false, // Add a new property
+      isTranslated: false, 
     }));
 
-    return modifiedData.map((event: any) => ({
-      id: event._id,
+    return modifiedData.map((event: CalendarEvent) => ({
+      id: event.id || event._id,
       isTranslated: event.isTranslated,
       title: event.title,
-      date: new Date(event.startDate).toISOString().split("T")[0],
+      description: event.description,
+      color: event.color,
+      colorLabel: event.colorLabel || event.color || "blue",
+      date: event.startDate ? new Date(event.startDate).toISOString().split("T")[0] : event.date ?? "",
+      startTime: event.startTime,
+      endTime: event.endTime,
+      source: "user",
       type: event.type || "event",
     }));
   } catch (error) {
@@ -154,54 +206,87 @@ async function fetchUserEvents() {
 
 export function CalendarProvider({ children }: { children: ReactNode }) {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [holidayEvents, setHolidayEvents] = useState<CalendarEvent[]>([]);
   const [userEvents, setUserEvents] = useState<CalendarEvent[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [authToken,] = useState<string | null>(() =>
+    typeof window !== "undefined" ? localStorage.getItem("token") : null,
+  );
   const holidaysCache = useRef(new Map<string, CalendarEvent[]>());
+  const refreshPromiseRef = useRef<Promise<void> | null>(null);
 
-  
-  
-    useEffect(() => {
-        const loadUserEvents = async () => {
-            const events = await fetchUserEvents();
-            setUserEvents(events);
-        };
+  useEffect(() => {
+  const syncAuth = () => {
+    return typeof window !== "undefined"
+      ? localStorage.getItem("token")
+      : null;
+  };
 
-        loadUserEvents();
-    }, []);
-  
+    syncAuth();
+    window.addEventListener("storage", syncAuth);
+    window.addEventListener("auth:changed", syncAuth as EventListener);
 
-    const refreshEvents = useCallback(async (year: number, month: number) => {
-        setLoading(true);
+    return () => {
+      window.removeEventListener("storage", syncAuth);
+      window.removeEventListener("auth:changed", syncAuth as EventListener);
+    };
+  }, []);
 
-        try {
+  const refreshEvents = useCallback(async (year: number, month: number) => {
+    if (!authToken) {
+      setHolidayEvents([]);
+      setUserEvents([]);
+      setEvents([]);
+      return;
+    }
 
-            const key = `${year}-${month}`;
+    if (refreshPromiseRef.current) {
+      return refreshPromiseRef.current;
+    }
 
-            let holidayEvents: CalendarEvent[];
+    refreshPromiseRef.current = (async () => {
+      setLoading(true);
 
-            if (holidaysCache.current.has(key)) {
-            holidayEvents = holidaysCache.current.get(key)!;
-            } else {
-            holidayEvents = await fetchHolidayEvents(year, month);
-            holidaysCache.current.set(key, holidayEvents);
-            }
+      try {
+        const key = `${year}-${month}`;
 
-            setEvents([...holidayEvents, ...userEvents]);
-        } finally {
-            setLoading(false);
+        let holidayData: CalendarEvent[];
+
+        if (holidaysCache.current.has(key)) {
+          holidayData = holidaysCache.current.get(key)!;
+        } else {
+          holidayData = await fetchHolidayEvents(year, month);
+          holidaysCache.current.set(key, holidayData);
         }
-    }, [userEvents]);
+
+        const userData = await fetchUserEvents();
+
+        setHolidayEvents(holidayData);
+        setUserEvents(userData);
+        setEvents([...holidayData, ...userData]);
+      } catch (error) {
+        console.error("Error refreshing calendar events:", error);
+      } finally {
+        setLoading(false);
+        refreshPromiseRef.current = null;
+      }
+    })();
+
+    return refreshPromiseRef.current;
+  }, [authToken]);
 
   useEffect(() => {
     const today = new Date();
 
     void refreshEvents(today.getFullYear(), today.getMonth() + 1);
-  }, [refreshEvents]);
+  }, [authToken, refreshEvents]);
 
   return (
     <CalendarContext.Provider
       value={{
         events,
+        holidayEvents,
+        userEvents,
         loading,
         refreshEvents,
       }}
