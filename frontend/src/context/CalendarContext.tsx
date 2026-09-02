@@ -173,7 +173,7 @@ async function fetchUserEvents() {
       return [];
     }
 
-    const response = await axios.get("http://localhost:5000/api/events", {
+    const response = await axios.get("https://character-moist-kangaroo.abasthan.app/api/events", {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

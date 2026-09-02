@@ -314,7 +314,7 @@ export default function CreateEventForm({ onSubmit }: CreateEventFormProps) {
     delete (payload as { colorLabel?: string }).colorLabel;
 
     try {
-      await axios.post("http://localhost:5000/api/events", payload, {
+      await axios.post("https://character-moist-kangaroo.abasthan.app/api/events", payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,

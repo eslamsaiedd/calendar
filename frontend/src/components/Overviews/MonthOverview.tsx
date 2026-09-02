@@ -157,7 +157,7 @@ export function MonthOverview({ data }: Props) {
     const endDate = new Date(`${values.date}T${values.endTime || "23:59"}:00`);
 
     await axios.patch(
-      `http://localhost:5000/api/events/${selectedEvent.id}`,
+      `https://character-moist-kangaroo.abasthan.app/api/events/${selectedEvent.id}`,
       {
         title: values.title,
         description: values.description,
@@ -188,7 +188,7 @@ export function MonthOverview({ data }: Props) {
       return;
     }
 
-    await axios.delete(`http://localhost:5000/api/events/${selectedEvent.id}`, {
+    await axios.delete(`https://character-moist-kangaroo.abasthan.app/api/events/${selectedEvent.id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -30,7 +30,7 @@ export function Signup() {
   function handleSignup() {
     // Perform signup logic here, e.g., send a request to the server
     
-    axios.post('http://localhost:5000/api/auth/signup', {
+    axios.post('https://character-moist-kangaroo.abasthan.app/api/auth/signup', {
         username: username,
         email: email,
         password: password

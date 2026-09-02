@@ -38,7 +38,7 @@ export default function UserContextProvider({
     if (!token) return;
 
     try {
-      const { data } = await axios.get("http://localhost:5000/api/auth/me", {
+      const { data } = await axios.get("https://character-moist-kangaroo.abasthan.app/api/auth/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

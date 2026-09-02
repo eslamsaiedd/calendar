@@ -51,7 +51,7 @@ export default function Profile() {
     };
 
     axios
-      .put('http://localhost:5000/api/auth/me', payload, {
+      .put('https://character-moist-kangaroo.abasthan.app/api/auth/me', payload, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       })
       .then((res) => {
@@ -76,7 +76,7 @@ export default function Profile() {
 
   const handleSignOut = async () => {
     try {
-      await axios.post('http://localhost:5000/api/auth/logout', {}, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+      await axios.post('https://character-moist-kangaroo.abasthan.app/api/auth/logout', {}, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
     } catch (e) {
       // ignore
     }
@@ -88,7 +88,7 @@ export default function Profile() {
   const handleDeleteAccount = async () => {
     if (!confirm('Delete your account? This is irreversible.')) return;
     try {
-      await axios.delete('http://localhost:5000/api/auth/me', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+      await axios.delete('https://character-moist-kangaroo.abasthan.app/api/auth/me', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
     } catch (e) {
       console.error('Failed to delete account', e);
     }
