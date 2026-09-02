@@ -15,7 +15,9 @@ export function Header() {
       {/* Logo */}
       <h1 className="text-2xl font-bold flex items-center gap-1 dark:text-white text-[var(--primary-color)]">
         <CalendarDays className="dark:text-white w-7 h-7" />
-        Calendar
+        <NavLink to="/">
+          Calendar
+        </NavLink>
       </h1>
 
       {/* Search bar */}

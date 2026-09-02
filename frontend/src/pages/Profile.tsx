@@ -103,7 +103,7 @@ export default function Profile() {
 
         {/* Profile Summary Card */}
         <div className="bg-white dark:bg-[var(--bg-card)] rounded-xl border border-[var(--updated-border-light)] dark:border-[var(--border)] p-6 shadow-sm flex items-center space-x-4">
-          <div className="w-16 h-16 rounded-full bg-[var(--bg-primary-light)] text-[var(--text-primary-dark)] font-semibold text-xl flex items-center justify-center flex-shrink-0">
+          <div className="w-16 h-16 rounded-full bg-[var(--bg-primary-light)] text-[var(--text-primary-dark)] dark:text-black font-semibold text-xl flex items-center justify-center flex-shrink-0">
             {profile.fullName
               ? profile.fullName
                   .split(' ')
@@ -243,7 +243,7 @@ export default function Profile() {
                 <p className="text-sm font-medium text-slate-800 dark:text-white">Sign out</p>
                 <p className="text-xs text-slate-500 dark:text-[var(--text-secondary-dark)]">End your current session on this device.</p>
               </div>
-              <button onClick={handleSignOut} className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-white bg-white dark:bg-[var(--bg-card)] border border-[var(--updated-border-light)] dark:border-[var(--border)] rounded-lg hover:bg-slate-50 dark:hover:bg-[var(--bg-primary-light)] transition">
+              <button onClick={handleSignOut} className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-white bg-white dark:bg-[var(--bg-card)] border border-[var(--updated-border-light)] dark:border-[var(--border)] hover:text-black rounded-lg hover:cursor-pointer hover:bg-slate-50 dark:hover:bg-[var(--bg-primary-light)] transition">
                 <LogOut className="w-3.5 h-3.5" />
                 <span>Sign Out</span>
               </button>
@@ -257,7 +257,7 @@ export default function Profile() {
                 <p className="text-sm font-medium text-red-600">Delete Account</p>
                 <p className="text-xs text-slate-500 dark:text-[var(--text-secondary-dark)]">Permanently remove your account and associated data.</p>
               </div>
-              <button onClick={handleDeleteAccount} className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 dark:bg-transparent border border-red-200 dark:border-red-700 rounded-lg hover:bg-red-100 dark:hover:bg-red-800/20 transition">
+              <button onClick={handleDeleteAccount} className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 dark:bg-transparent border border-red-200 dark:border-red-700 rounded-lg hover:bg-red-100 hover:cursor-pointer dark:hover:bg-red-800/20 transition">
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Delete Account</span>
               </button>

@@ -18,10 +18,9 @@ async function start() {
   const io = initSockets(httpServer);
   app.set('io', io); // makes io available to controllers via req.app.get('io')
 
-  httpServer.listen(env.port, () => {
-    // eslint-disable-next-line no-console
-    console.log(`[server] Running in ${env.nodeEnv} mode on port ${env.port}`);
-  });
+  httpServer.listen(env.port, '0.0.0.0', () => {
+  console.log(`[server] Running in ${env.nodeEnv} mode on port ${env.port}`);
+});
 
   process.on('unhandledRejection', (err) => {
     // eslint-disable-next-line no-console
